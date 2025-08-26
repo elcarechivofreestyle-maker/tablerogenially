@@ -29,10 +29,12 @@
       border: 2px solid #444;
     }
     .casilla {
-      background: #222;
-      border: 1px solid #555;
+      border: 2px solid #000;
       position: relative;
     }
+    .casilla:nth-child(3n+1) { background: #0055ff; } /* azul */
+    .casilla:nth-child(3n+2) { background: #ffffff; } /* blanco */
+    .casilla:nth-child(3n+3) { background: #ff0000; } /* rojo */
     .ficha {
       width: 90%;
       height: 90%;
@@ -59,25 +61,37 @@
     tablero.appendChild(casilla);
   }
 
-  // Crear ficha con imagen personalizada
-  const ficha = document.createElement("img");
-  ficha.src = "ficha1.png"; // Reemplaza con tu imagen local
-  ficha.className = "ficha";
-  ficha.draggable = true;
-  ficha.id = "ficha1";
+  // Lista de fichas con sus posiciones iniciales (casillas 0 a 2 y 5 a 7)
+  const fichas = [
+    { id: "ficha1", src: "ficha1.png", casillaInicial: 0 },
+    { id: "ficha2", src: "ficha2.png", casillaInicial: 1 },
+    { id: "ficha3", src: "ficha3.png", casillaInicial: 2 },
+    { id: "ficha4", src: "ficha4.png", casillaInicial: 5 },
+    { id: "ficha5", src: "ficha5.png", casillaInicial: 6 },
+    { id: "ficha6", src: "ficha6.png", casillaInicial: 7 }
+  ];
 
-  // Insertar ficha en la primera casilla o restaurar posición
+  // Crear e insertar fichas
   window.addEventListener("load", () => {
-    const saved = localStorage.getItem("ficha1");
-    const target = document.getElementById(saved) || document.getElementById("casilla-0");
-    target.appendChild(ficha);
+    fichas.forEach(f => {
+      const ficha = document.createElement("img");
+      ficha.src = f.src;
+      ficha.className = "ficha";
+      ficha.draggable = true;
+      ficha.id = f.id;
+
+      const saved = localStorage.getItem(f.id);
+      const target = document.getElementById(saved) || document.getElementById("casilla-" + f.casillaInicial);
+      target.appendChild(ficha);
+
+      // Movimiento libre con memoria
+      ficha.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text/plain", f.id);
+      });
+    });
   });
 
-  // Movimiento libre con memoria
-  ficha.addEventListener("dragstart", e => {
-    e.dataTransfer.setData("text/plain", ficha.id);
-  });
-
+  // Casillas receptivas
   document.querySelectorAll(".casilla").forEach(casilla => {
     casilla.addEventListener("dragover", e => e.preventDefault());
     casilla.addEventListener("drop", e => {
