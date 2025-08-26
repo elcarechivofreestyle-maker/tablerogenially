@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Tablero Estable</title>
+  <title>Tablero con Área de Inicio</title>
   <style>
     html, body {
       margin: 0;
@@ -16,6 +16,23 @@
       justify-content: center;
       align-items: center;
     }
+
+    .zona-juego {
+      display: flex;
+      gap: 16px;
+    }
+
+    .inicio {
+      display: grid;
+      grid-template-rows: repeat(8, 1fr);
+      width: 100px;
+      height: 640px;
+      background: #222;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 2px solid #444;
+    }
+
     .contenedor {
       width: 640px;
       height: 640px;
@@ -28,13 +45,16 @@
       box-sizing: border-box;
       border: 2px solid #444;
     }
+
     .casilla {
       border: 2px solid #000;
       position: relative;
     }
-    .casilla:nth-child(3n+1) { background: #0055ff; } /* azul */
-    .casilla:nth-child(3n+2) { background: #ffffff; } /* blanco */
-    .casilla:nth-child(3n+3) { background: #ff0000; } /* rojo */
+
+    .casilla:nth-child(3n+1) { background: #0055ff; }
+    .casilla:nth-child(3n+2) { background: #ffffff; }
+    .casilla:nth-child(3n+3) { background: #ff0000; }
+
     .ficha {
       width: 90%;
       height: 90%;
@@ -48,12 +68,16 @@
 </head>
 <body>
 
-<div class="contenedor" id="tablero"></div>
+<div class="zona-juego">
+  <div class="inicio" id="zona-inicial"></div>
+  <div class="contenedor" id="tablero"></div>
+</div>
 
 <script>
   const tablero = document.getElementById("tablero");
+  const zonaInicial = document.getElementById("zona-inicial");
 
-  // Crear 25 casillas
+  // Crear 25 casillas del tablero principal
   for (let i = 0; i < 25; i++) {
     const casilla = document.createElement("div");
     casilla.className = "casilla";
@@ -61,14 +85,24 @@
     tablero.appendChild(casilla);
   }
 
-  // Lista de fichas con sus posiciones iniciales (casillas 0 a 2 y 5 a 7)
+  // Crear 8 casillas de inicio
+  for (let i = 0; i < 8; i++) {
+    const casilla = document.createElement("div");
+    casilla.className = "casilla";
+    casilla.id = "inicio-" + i;
+    zonaInicial.appendChild(casilla);
+  }
+
+  // Lista de fichas
   const fichas = [
-    { id: "ficha1", src: "ficha1.png", casillaInicial: 0 },
-    { id: "ficha2", src: "ficha2.png", casillaInicial: 1 },
-    { id: "ficha3", src: "ficha3.png", casillaInicial: 2 },
-    { id: "ficha4", src: "ficha4.png", casillaInicial: 5 },
-    { id: "ficha5", src: "ficha5.png", casillaInicial: 6 },
-    { id: "ficha6", src: "ficha6.png", casillaInicial: 7 }
+    { id: "ficha1", src: "ficha1.png", casillaInicial: "inicio-0" },
+    { id: "ficha2", src: "ficha2.png", casillaInicial: "inicio-1" },
+    { id: "ficha3", src: "ficha3.png", casillaInicial: "inicio-2" },
+    { id: "ficha4", src: "ficha4.png", casillaInicial: "inicio-3" },
+    { id: "ficha5", src: "ficha5.png", casillaInicial: "inicio-4" },
+    { id: "ficha6", src: "ficha6.png", casillaInicial: "inicio-5" },
+    { id: "ficha7", src: "ficha7.png", casillaInicial: "inicio-6" },
+    { id: "ficha8", src: "ficha8.png", casillaInicial: "inicio-7" }
   ];
 
   // Crear e insertar fichas
@@ -81,10 +115,9 @@
       ficha.id = f.id;
 
       const saved = localStorage.getItem(f.id);
-      const target = document.getElementById(saved) || document.getElementById("casilla-" + f.casillaInicial);
+      const target = document.getElementById(saved) || document.getElementById(f.casillaInicial);
       target.appendChild(ficha);
 
-      // Movimiento libre con memoria
       ficha.addEventListener("dragstart", e => {
         e.dataTransfer.setData("text/plain", f.id);
       });
