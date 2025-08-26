@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tablero Estable</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      font-family: sans-serif;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .contenedor {
+      width: 320px;
+      height: 320px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 4px;
+      background: #000;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 2px solid #444;
+    }
+    .casilla {
+      background: #222;
+      border: 1px solid #555;
+      position: relative;
+    }
+    .ficha {
+      width: 90%;
+      height: 90%;
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      cursor: grab;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="contenedor" id="tablero"></div>
+
+<script>
+  const tablero = document.getElementById("tablero");
+
+  // Crear 25 casillas
+  for (let i = 0; i < 25; i++) {
+    const casilla = document.createElement("div");
+    casilla.className = "casilla";
+    casilla.id = "casilla-" + i;
+    tablero.appendChild(casilla);
+  }
+
+  // Crear ficha con imagen personalizada
+  const ficha = document.createElement("img");
+  ficha.src = "ficha1.png"; // Reemplaza con tu imagen local
+  ficha.className = "ficha";
+  ficha.draggable = true;
+  ficha.id = "ficha1";
+
+  // Insertar ficha en la primera casilla o restaurar posición
+  window.addEventListener("load", () => {
+    const saved = localStorage.getItem("ficha1");
+    const target = document.getElementById(saved) || document.getElementById("casilla-0");
+    target.appendChild(ficha);
+  });
+
+  // Movimiento libre con memoria
+  ficha.addEventListener("dragstart", e => {
+    e.dataTransfer.setData("text/plain", ficha.id);
+  });
+
+  document.querySelectorAll(".casilla").forEach(casilla => {
+    casilla.addEventListener("dragover", e => e.preventDefault());
+    casilla.addEventListener("drop", e => {
+      e.preventDefault();
+      const id = e.dataTransfer.getData("text/plain");
+      const ficha = document.getElementById(id);
+      casilla.appendChild(ficha);
+      localStorage.setItem(id, casilla.id);
+    });
+  });
+</script>
+
+</body>
+</html>
