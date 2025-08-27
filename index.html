@@ -80,17 +80,30 @@
   // Crear 25 casillas del tablero principal
   for (let i = 0; i < 25; i++) {
     const casilla = document.createElement("div");
-    casilla.className = "casilla";
-    casilla.id = "casilla-" + i;
-    tablero.appendChild(casilla);
+casilla.className = "casilla";
+casilla.id = "casilla-" + i;
+
+// Crear etiqueta de nombre
+const etiqueta = document.createElement("span");
+etiqueta.className = "etiqueta";
+etiqueta.textContent = "C" + (i + 1); // Puedes cambiar el formato aquí
+
+casilla.appendChild(etiqueta);
+tablero.appendChild(casilla);
   }
 
   // Crear 8 casillas de inicio
   for (let i = 0; i < 8; i++) {
     const casilla = document.createElement("div");
-    casilla.className = "casilla";
-    casilla.id = "inicio-" + i;
-    zonaInicial.appendChild(casilla);
+casilla.className = "casilla";
+casilla.id = "inicio-" + i;
+
+const etiqueta = document.createElement("span");
+etiqueta.className = "etiqueta";
+etiqueta.textContent = "I" + (i + 1);
+
+casilla.appendChild(etiqueta);
+zonaInicial.appendChild(casilla);
   }
 
   // Lista de fichas
