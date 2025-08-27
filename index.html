@@ -1,103 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Tablero con Área de Inicio</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #111;
-      font-family: sans-serif;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .zona-juego {
-      display: flex;
-      gap: 16px;
-    }
-
-    .inicio {
-      display: grid;
-      grid-template-rows: repeat(8, 1fr);
-      width: 100px;
-      height: 640px;
-      background: #222;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 2px solid #444;
-    }
-
-    .contenedor {
-      width: 640px;
-      height: 640px;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(5, 1fr);
-      gap: 4px;
-      background: #000;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 2px solid #444;
-    }
-
-    .casilla {
-      border: 2px solid #000;
-      position: relative;
-    }
-
-    .casilla:nth-child(3n+1) { background: #0055ff; }
-    .casilla:nth-child(3n+2) { background: #ffffff; }
-    .casilla:nth-child(3n+3) { background: #ff0000; }
-
-    .ficha {
-      width: 90%;
-      height: 90%;
-      position: absolute;
-      top: 5%;
-      left: 5%;
-      cursor: grab;
-      border-radius: 6px;
-    }
-
-    .boton-reset {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 100;
-      padding: 10px 20px;
-      font-size: 14px;
-      background: #ff4444;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .boton-reset:hover {
-      background: #ff2222;
-    }
-  </style>
-</head>
-<body>
-
-<button class="boton-reset" onclick="reiniciarJuego()">🔄 Reiniciar Juego</button>
-
-<div class="zona-juego">
-  <div class="inicio" id="zona-inicial"></div>
-  <div class="contenedor" id="tablero"></div>
-</div>
-
 <script>
   const tablero = document.getElementById("tablero");
   const zonaInicial = document.getElementById("zona-inicial");
 
-  // Crear 25 casillas del tablero principal
+  // Crear casillas del tablero
   for (let i = 0; i < 25; i++) {
     const casilla = document.createElement("div");
     casilla.className = "casilla";
@@ -111,7 +16,7 @@
     tablero.appendChild(casilla);
   }
 
-  // Crear 8 casillas de inicio
+  // Crear casillas de inicio
   for (let i = 0; i < 8; i++) {
     const casilla = document.createElement("div");
     casilla.className = "casilla";
@@ -136,8 +41,8 @@
     { id: "ficha8", src: "ficha8.png", casillaInicial: "inicio-7" }
   ];
 
-  // Crear e insertar fichas
   window.addEventListener("load", () => {
+    // Crear e insertar fichas
     fichas.forEach(f => {
       const ficha = document.createElement("img");
       ficha.src = f.src;
@@ -153,23 +58,29 @@
         e.dataTransfer.setData("text/plain", f.id);
       });
     });
-  });
 
-  // Casillas receptivas
-  document.querySelectorAll(".casilla").forEach(casilla => {
-    casilla.addEventListener("dragover", e => e.preventDefault());
-    casilla.addEventListener("drop", e => {
-      e.preventDefault();
-      const id = e.dataTransfer.getData("text/plain");
-      const ficha = document.getElementById(id);
-      casilla.appendChild(ficha);
-      localStorage.setItem(id, casilla.id);
+    // Activar casillas receptivas
+    document.querySelectorAll(".casilla").forEach(casilla => {
+      casilla.addEventListener("dragover", e => e.preventDefault());
+      casilla.addEventListener("drop", e => {
+        e.preventDefault();
+        const id = e.dataTransfer.getData("text/plain");
+        const ficha = document.getElementById(id);
+        casilla.appendChild(ficha);
+        localStorage.setItem(id, casilla.id);
+      });
     });
-  });
 
-  // Función de reinicio
-  function reiniciarJuego() {
-    fichas.forEach(f => {
-      localStorage.removeItem(f.id);
-      const ficha = document.getElementById(f.id);
-      const
+    // ✅ Función de reinicio (ahora sí funciona bien)
+    window.reiniciarJuego = function () {
+      fichas.forEach(f => {
+        localStorage.removeItem(f.id);
+        const ficha = document.getElementById(f.id);
+        const casillaInicial = document.getElementById(f.casillaInicial);
+        if (ficha && casillaInicial) {
+          casillaInicial.appendChild(ficha);
+        }
+      });
+    };
+  });
+</script>
