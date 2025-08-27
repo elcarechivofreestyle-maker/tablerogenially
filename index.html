@@ -64,9 +64,29 @@
       cursor: grab;
       border-radius: 6px;
     }
+
+    .boton-reset {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      padding: 10px 20px;
+      font-size: 14px;
+      background: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .boton-reset:hover {
+      background: #ff2222;
+    }
   </style>
 </head>
 <body>
+
+<button class="boton-reset" onclick="reiniciarJuego()">🔄 Reiniciar Juego</button>
 
 <div class="zona-juego">
   <div class="inicio" id="zona-inicial"></div>
@@ -80,33 +100,31 @@
   // Crear 25 casillas del tablero principal
   for (let i = 0; i < 25; i++) {
     const casilla = document.createElement("div");
-casilla.className = "casilla";
-casilla.id = "casilla-" + i;
+    casilla.className = "casilla";
+    casilla.id = "casilla-" + i;
 
-// Crear etiqueta de nombre
-const etiqueta = document.createElement("span");
-etiqueta.className = "etiqueta";
-etiqueta.textContent = "C" + (i + 1); // Puedes cambiar el formato aquí
+    const etiqueta = document.createElement("span");
+    etiqueta.className = "etiqueta";
+    etiqueta.textContent = "C" + (i + 1);
 
-casilla.appendChild(etiqueta);
-tablero.appendChild(casilla);
+    casilla.appendChild(etiqueta);
+    tablero.appendChild(casilla);
   }
 
   // Crear 8 casillas de inicio
   for (let i = 0; i < 8; i++) {
     const casilla = document.createElement("div");
-casilla.className = "casilla";
-casilla.id = "inicio-" + i;
+    casilla.className = "casilla";
+    casilla.id = "inicio-" + i;
 
-const etiqueta = document.createElement("span");
-etiqueta.className = "etiqueta";
-etiqueta.textContent = "I" + (i + 1);
+    const etiqueta = document.createElement("span");
+    etiqueta.className = "etiqueta";
+    etiqueta.textContent = "I" + (i + 1);
 
-casilla.appendChild(etiqueta);
-zonaInicial.appendChild(casilla);
+    casilla.appendChild(etiqueta);
+    zonaInicial.appendChild(casilla);
   }
 
-  // Lista de fichas
   const fichas = [
     { id: "ficha1", src: "ficha1.png", casillaInicial: "inicio-0" },
     { id: "ficha2", src: "ficha2.png", casillaInicial: "inicio-1" },
@@ -148,7 +166,10 @@ zonaInicial.appendChild(casilla);
       localStorage.setItem(id, casilla.id);
     });
   });
-</script>
 
-</body>
-</html>
+  // Función de reinicio
+  function reiniciarJuego() {
+    fichas.forEach(f => {
+      localStorage.removeItem(f.id);
+      const ficha = document.getElementById(f.id);
+      const
